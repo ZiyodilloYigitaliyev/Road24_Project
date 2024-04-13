@@ -84,4 +84,4 @@ def signup(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def test_token(request):
-    return Response({"message": f"Hello, {request.user.email}"})
+    return Response({"message": f"SMS, {request.user.email}"})
