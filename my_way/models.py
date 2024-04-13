@@ -25,9 +25,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True, verbose_name='email')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
     objects = UserManager()
-
     username = models.CharField(max_length=150, blank=True)  # Optional username field for compatibility
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -38,3 +36,19 @@ class User(AbstractBaseUser):
     verification_code = models.CharField(max_length=6)  # Tasdiqlash kodi
     def __str__(self):
         return self.email
+
+class JarimaToifasi(models.Model):
+    name = models.TextField(unique=True)
+    def __str__(self):
+        return self.name
+
+class Bob(models.Model):
+    title = models.CharField(max_length=150, unique=True)
+    description = models.TextField(blank=True)
+class Jarima(models.Model):
+    name = models.TextField(unique=True)
+    category = models.ForeignKey(JarimaToifasi, on_delete=models.CASCADE, verbose_name='Jarima toifasi')
+    bob = models.ManyToManyField(Bob)
+    def __str__(self):
+        return self.title
+
