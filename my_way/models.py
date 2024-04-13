@@ -31,6 +31,10 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=150, blank=True)  # Optional username field for compatibility
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-
+    license_number = models.IntegerField(max_length=50, blank=True)
+    date_start = models.DateField()
+    date_and = models.DateField()
+    phone_number = models.CharField(max_length=15)  # Telefon raqami
+    verification_code = models.CharField(max_length=6)  # Tasdiqlash kodi
     def __str__(self):
         return self.email

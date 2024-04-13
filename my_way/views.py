@@ -73,13 +73,28 @@ def signup(request):
                 )
             except TwilioRestException as e:
                 return Response({'error': f'An error occurred sending SMS: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        User.objects.create(phone_number=phone_number, verification_code=verification_code)
         token = Token.objects.get_or_create(user=user)
         return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+def verify_code(request):
+    phone_number = request.data.get('phone_number')
+    verification_code = request.data.get('verification_code')
 
+    if not phone_number or not verification_code:
+        return Response({'error': 'Please provide both phone number and verification code'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        sms_verification = User.objects.get(phone_number=phone_number, verification_code=verification_code)
+    except User.DoesNotExist:
+        return Response({'error': 'Invalid verification code'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Agar tasdiqlash kodi to'g'ri bo'lsa
+    sms_verification.delete()  # Tasdiqlash kodi o'chiriladi
+    return Response({'message': 'Verification code verified successfully'}, status=status.HTTP_200_OK)
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
