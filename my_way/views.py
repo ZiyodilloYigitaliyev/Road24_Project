@@ -14,6 +14,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.decorators import authentication_classes, permission_classes
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 
@@ -63,11 +64,11 @@ def signup(request):
 
         if phone_number:
             verification_code = ''.join(random.choices('0123456789', k=6))
-            twilio_client = Client(os.getenv(''), os.getenv(''))
+            twilio_client = Client(os.getenv('TWILIO_ACCOUNT_SID'), os.getenv('TWILIO_AUTH_TOKEN'))
             try:
                 message = twilio_client.messages.create(
                     body=f'Your verification code is: {verification_code}',
-                    from_='',
+                    from_='+13343730917',
                     to=phone_number
                 )
             except TwilioRestException as e:
